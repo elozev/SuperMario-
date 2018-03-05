@@ -16,7 +16,7 @@ def draw_handler(canvas):
 	global counter
 	counter += 1
 	bg.animate(canvas)
-	# bg.update(kb.background_movement())
+	bg.update(kb.background_movement())
 
 
 

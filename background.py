@@ -4,6 +4,8 @@ except:
 	import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 class Background:
 
+	MOVEMENT_SPEED = 2
+
 	def __init__(self, img_url, canvas_width, canvas_height):
 		self.image = simplegui.load_image(img_url)
 
@@ -22,13 +24,13 @@ class Background:
 			(self.canvas_w, self.img_height),
 			(self.canvas_w / 2, self.canvas_h / 2),
 			(self.canvas_w, self.canvas_h))
-		self.update(2)
 
 
 
 	def update(self, offset):
 		if(self.img_help >= self.img_width):
 			self.img_help = self.canvas_w
-		elif(self.img_help <= 0):
+		elif(self.img_help <= self.canvas_w):
 			self.img_help = self.img_width
+		print(self.img_help)
 		self.img_help += offset 
