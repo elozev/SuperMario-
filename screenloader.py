@@ -14,11 +14,10 @@ class ScreenLoader:
     def load_obstacles(self, start_at):
         self.obstacles_distance_between = start_at
         res = []
-        # for i in range(8):
-        ob = self.get_random_object()
-        res.append(ob)
-        # self.obstacles_distance_between += (ob.get_scaled_img_w() + 200)
-        self.obstacles_distance_between += 2000
+        for i in range(8):
+            ob = self.get_random_object()
+            res.append(ob)
+            self.obstacles_distance_between += (ob.get_scaled_img_w() + 200)
         return res
 
     def get_random_object(self):
