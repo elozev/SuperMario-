@@ -3,6 +3,8 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
+import random
+
 from background import Background
 from constants import Constants
 from keyboard import Keyboard
