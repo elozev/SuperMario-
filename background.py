@@ -16,6 +16,7 @@ class Background:
         self.canvas_h = canvas_height
 
         self.bg_animate_at_w = self.canvas_w
+        self.progress = self.bg_animate_at_w
 
     def animate_background(self, canvas):
         canvas.draw_image(self.image,
@@ -31,3 +32,7 @@ class Background:
         elif self.bg_animate_at_w <= self.canvas_w:
             self.bg_animate_at_w = self.img_width
         self.bg_animate_at_w += offset
+        self.progress += offset
+
+    def get_progress(self):
+        return self.progress

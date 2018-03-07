@@ -29,7 +29,7 @@ counter = 0
 img = "https://i.imgur.com/uYaDwBC.jpg"
 
 bg = Background(img, WIDTH, HEIGHT)
-sc = Screen(100)
+sc = Screen(bg)
 kb = Keyboard()
 
 frame = simplegui.create_frame("SuperMario-", WIDTH, HEIGHT)
