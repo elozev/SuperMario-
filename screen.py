@@ -1,3 +1,4 @@
+from collision import Collision
 from constants import Constants
 from screenloader import ScreenLoader
 from testball import TestBall
@@ -15,6 +16,7 @@ class Screen:
 
         self.test_ball = TestBall(Vector(400, 400), 30, 2, 'red')
         self.ms = Mouse(self.test_ball)
+        self.collision_handler = Collision()
 
     def animate(self, canvas):
         for sb in self.screen_objects:
@@ -24,7 +26,6 @@ class Screen:
         for ob in self.obstacles:
             ob.animate(canvas)
 
-
     def update(self, offset, canvas):
         self.check_distance_traveled()
 
@@ -33,8 +34,10 @@ class Screen:
 
         for ob in self.obstacles:
             ob.update(offset)
-            if ob.is_colliding_with_ball(self.test_ball, canvas):
-                self.test_ball.vel = Vector(0,0)
+            if self.collision_handler.is_colliding_with_ball(ob, self.test_ball):
+                # TODO trigger action
+                self.collision_handler.trigger_action(ob.type)
+                self.test_ball.vel = Vector(0, 0)
 
     def check_distance_traveled(self):
         if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH:
