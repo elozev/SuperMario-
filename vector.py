@@ -1,125 +1,57 @@
-################################################################################
-# You need the math library to compute the square root of a number.
-# The method to be used is math.sqrt.
-
 import math
 
-################################################################################
-# Classes
-from collision import Collision
 
-
-# The Vector class
 class Vector:
 
-    # Initialiser
-    def __init__(self, x=0, y=0, w=0, h=0):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
 
-    # Returns a string representation of the vector
-    def __str__(self):
-        return "(" + str(self.x) + "," + str(self.y) + ")"
-
-    # Tests the equality of this vector and another
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
-
-    # Tests the inequality of this vector and another
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    # Returns a tuple with the point corresponding to the vector
+    # get tuple of vector
     def getP(self):
         return (self.x, self.y)
 
-    # Returns a copy of the vector
-    def copy(self):
-        return Vector(self.x, self.y)
+    # point vector to opposite direction
+    def negate(self):
+        self.multiply(-1)
+        return self
 
-    # Adds another vector to this vector
     def add(self, other):
         self.x += other.x
         self.y += other.y
         return self
 
-    def __add__(self, other):
-        return self.copy().add(other);
-
-    # Negates the vector (makes it point in the opposite direction)
-    def negate(self):
-        return self.multiply(-1)
-
-    def __neg__(self):
-        return self.copy().negate()
-
-    # Subtracts another vector from this vector
-    def subtract(self, other):
-        return self.add(-other)
-
-    def __sub__(self, other):
-        return self.copy().subtract(other)
-
-    # Multiplies the vector by a scalar
-    def multiply(self, k):
-        self.x *= k
-        self.y *= k
+    def substract(self, other):
+        self.x -= other.x
+        self.y -= other.y
         return self
 
-    def __mul__(self, k):
-        return self.copy().multiply(k)
+    def multiply(self, scalar):
+        self.x *= scalar
+        self.y *= scalar
+        return self
 
-    def __rmul__(self, k):
-        return self.copy().multiply(k)
+    def divide(self, scalar):
+        self.multiply(1 / scalar)
+        return self
 
-    # Divides the vector by a scalar
-    def divide(self, k):
-        return self.multiply(1 / k)
+    def copy(self):
+        return Vector(self.x, self.y)
 
-    def __truediv__(self, k):
-        return self.copy().divide(k)
+    def __str__(self):
+        return "(" + str(self.x) + " : " + str(self.y) + ")"
 
-    # Normalizes the vector
     def normalize(self):
         return self.divide(self.length())
 
-    # Returns a normalized version of the vector
-    def getNormalized(self):
-        return self.copy().normalize()
-
-    # Returns the dot product of this vector with another one
-    def dot(self, other):
-        pass
-
-    # Returns the length of the vector
     def length(self):
-        return math.sqrt(self.x ** 2 + self.y ** 2)
+        return math.sqrt(math.pow(self.x, 2) + math.pow(self.y, 2))
 
-    # Returns the squared length of the vector
-    def lengthSquared(self):
-        return self.x ** 2 + self.y ** 2
+    def reflect(self, n):
+        new_vec = (2 * self.dot(n.normalize()) * n).substract(self.copy())
+        self.x = new_vec.x
+        self.y = new_vec.y
+        return self
 
-    # Reflect this vector on a normal
-    def reflect(self, normal):
-        pass
-
-    # Returns the angle between this vector and another one
-    # You will need to use the arccosine function:
-    # acos in the math library
-    def angle(self, other):
-        pass
-
-    # functions that could be in another class
-    def get_position_offset(self, from_where):
-        p = self.getP()
-        if from_where == Collision.LEFT:
-            return (p.x - self.w, p.y)
-        elif from_where == Collision.RIGHT:
-            return (p.x + self.w, p.y)
-        elif from_where == Collision.TOP:
-            return (p.x, p.y + self.h)
-
-
-class ScreenObject(Vector):
-    def __int__(self, x, y, w, h):
-        super(x, y)
+    def dot(self, other):
+        return self.x * other.x + self.y * other.y
