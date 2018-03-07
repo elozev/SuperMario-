@@ -12,19 +12,20 @@ class ScreenLoader:
         self.obstacles_distance_between = 500
 
     def load_obstacles(self, start_at):
-        self.obstacles_distance_between = start_at - Constants.WIDTH
+        self.obstacles_distance_between = start_at
         res = []
-        for i in range(8):
-            ob = self.get_random_object()
-            res.append(ob)
-            self.obstacles_distance_between += (ob.get_scaled_img_w() + 200)
+        # for i in range(8):
+        ob = self.get_random_object()
+        res.append(ob)
+        # self.obstacles_distance_between += (ob.get_scaled_img_w() + 200)
+        self.obstacles_distance_between += 2000
         return res
 
     def get_random_object(self):
-        r = random.randrange(0, 8)
-        if r == 0:
-            return ScreenObjects(Constants.BUSH, 7, Constants.BASE, self.obstacles_distance_between)
-        elif r == 1:
+        r = random.randrange(1, 8)
+        # if r == 0:
+        #   return ScreenObjects(Constants.BUSH, 7, Constants.BASE, self.obstacles_distance_between)
+        if r == 1:
             return Obstacle(Constants.GREEN_PIPE, 6, Constants.BASE, self.obstacles_distance_between)
         elif r == 2:
             return Obstacle(Constants.QUESTION_BLOCK, 30, Constants.BLOCKS_POSITION,

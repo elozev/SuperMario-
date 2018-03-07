@@ -1,5 +1,8 @@
 from constants import Constants
 from screenloader import ScreenLoader
+from testball import TestBall
+from testmouse import Mouse
+from vector import Vector
 
 
 class Screen:
@@ -10,14 +13,19 @@ class Screen:
         self.screen_objects = self.generate_clouds()
         self.background = background
 
+        self.test_ball = TestBall(Vector(400, 400), 30, 2, 'red')
+        self.ms = Mouse(self.test_ball)
+
     def animate(self, canvas):
         for sb in self.screen_objects:
             sb.animate(canvas)
 
+        self.test_ball.animate(canvas)
         for ob in self.obstacles:
             ob.animate(canvas)
 
-    def update(self, offset):
+
+    def update(self, offset, canvas):
         self.check_distance_traveled()
 
         for sb in self.screen_objects:
@@ -25,6 +33,8 @@ class Screen:
 
         for ob in self.obstacles:
             ob.update(offset)
+            if ob.is_colliding_with_ball(self.test_ball, canvas):
+                self.test_ball.vel = Vector(0,0)
 
     def check_distance_traveled(self):
         if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH:

@@ -16,3 +16,7 @@ class Constants:
     EIGHT_BLOCK = "https://i.imgur.com/6JE8OOD.png"
     CLOUD = "https://i.imgur.com/ueJ91rY.png"
     FALL_BLOCK = "https://i.imgur.com/V1jvSaE.png"
+
+    TYPE_PIPE = "pipe"
+    TYPE_BLOCK = "block"
+    TYPE_FALL_BLOCK = "fall-block"

@@ -27,9 +27,6 @@ class ScreenObjects:
     def update(self, offset):
         self.animate_at_w -= offset
 
-    def set_animate_at_w(self, animate_at_w):
-        self.animate_at_w = animate_at_w
-
     def __str__(self):
         return "Object: \nimage width: " + str(self.img_w) + \
                "\nimage height: " + str(self.img_h) + \
@@ -46,3 +43,28 @@ class Obstacle(ScreenObjects):
 
     def __init__(self, img_url, scale, base, start_at):
         super(Obstacle, self).__init__(img_url, scale, base, start_at)
+
+    def update(self, offset):
+        self.animate_at_w -= offset
+
+    def is_colliding_with_ball(self, ball, canvas):
+
+        box_pos_x = self.animate_at_w / 2 - self.scaled_img_w / 2
+        box_pos_y = self.base - self.scaled_img_h / 2
+
+        canvas.draw_circle((box_pos_x, box_pos_y), 5, 1, 'white', 'white')
+        canvas.draw_circle((box_pos_x - self.scaled_img_w, box_pos_y), 5, 1, 'white', 'white')
+        canvas.draw_circle((box_pos_x - self.scaled_img_w, box_pos_y - self.scaled_img_h), 5, 1, 'white', 'white')
+        canvas.draw_circle((box_pos_x, box_pos_y - self.scaled_img_h), 5, 1, 'white', 'white')
+
+        # canvas.draw_circle((box_x, box_y), 3, 1, 'red', 'red')
+        # canvas.draw_circle((box_x, box_y), 3, 1, 'red', 'red')
+
+        canvas.draw_polygon([(box_pos_x, box_pos_y), (box_pos_x + self.scaled_img_w, box_pos_y),
+                             (box_pos_x + self.scaled_img_w, box_pos_y + self.scaled_img_h),
+                             (box_pos_x, box_pos_y + self.scaled_img_h)], 2, 'Green')
+
+        return ball.pos.x + ball.rad > box_pos_x and \
+               ball.pos.y + ball.rad > box_pos_y and \
+               ball.pos.x - ball.rad < box_pos_x + self.scaled_img_w and \
+               ball.pos.y - ball.rad < box_pos_y + self.scaled_img_h
