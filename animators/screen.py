@@ -1,9 +1,9 @@
-from collision import Collision
+from player.collision import Collision
 from constants import Constants
-from screenloader import ScreenLoader
-from testball import TestBall
-from testmouse import Mouse
-from vector import Vector
+from animators.screenloader import ScreenLoader
+from player.testball import TestBall
+from handlers.testmouse import Mouse
+from player.vector import Vector
 
 
 class Screen:
