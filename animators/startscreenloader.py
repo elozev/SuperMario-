@@ -10,7 +10,7 @@ except ImportError:
 # <Leila code>
 class StartScreenLoader:
 
-    def __init__(self):
+    def __init__(self, state):
         self.background = ImageInfo([320, 240], [640, 480])
         self.backgroundImage = simplegui.load_image("https://i.imgur.com/fY8di.jpg")
 
@@ -22,6 +22,7 @@ class StartScreenLoader:
         self.logo_info = ImageInfo([124, 12], [248, 23])
         self.logo = simplegui.load_image("https://fontmeme.com/permalink/180307/3d9848417b5eb71c112dcb18cf23b2d0.png")
         self.time = 0
+        self.state = state
 
     def draw(self, canvas):
         center = self.background.get_center()
@@ -41,12 +42,8 @@ class StartScreenLoader:
         canvas.draw_text(str(0), [50, 80], 22, "White", "sans-serif")
         canvas.draw_text(str(0), [680, 80], 22, "White", "sans-serif")
 
+        canvas.draw_image(self.logo, self.logo_info.get_center(), self.logo_info.get_size(),
+                          [Constants.WIDTH / 2, Constants.HEIGHT / 2], [248, 23])
+
     def click(self, pos):
-        center = [Constants.WIDTH / 2, Constants.HEIGHT / 2]
-        size = self.bkinfo.get_size()
-        inwidth = (center[0] - size[0] / 2) < pos[0] < (center[0] + size[0] / 2)
-        inheight = (center[1] - size[1] / 2) < pos[1] < (center[1] + size[1] / 2)
-        # if (not started) and inwidth and inheight:
-        #     started = True
-        #     lives = 10
-        #     score = 0
+        self.state.load_playground()

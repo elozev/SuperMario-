@@ -1,4 +1,6 @@
 class Constants:
+    BACKGROUND_IMAGE = "https://i.imgur.com/uYaDwBC.jpg"
+
     GROUND_HEIGHT = 130
     WIDTH = 800
     HEIGHT = 800
