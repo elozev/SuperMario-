@@ -45,5 +45,7 @@ class StartScreenLoader:
         canvas.draw_image(self.logo, self.logo_info.get_center(), self.logo_info.get_size(),
                           [Constants.WIDTH / 2, Constants.HEIGHT / 2], [248, 23])
 
+    # </Leila code>
+    # <Emil code>
     def click(self, pos):
         self.state.load_playground()

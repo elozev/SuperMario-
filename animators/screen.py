@@ -36,6 +36,8 @@ class Screen:
             ob.update(offset)
             if self.collision_handler.is_colliding_with_ball(ob, self.test_ball):
                 # TODO trigger action
+                self.collision_handler.determine_collision_location(ob, self.test_ball)
+
                 self.collision_handler.trigger_action(ob.type)
                 self.test_ball.vel = Vector(0, 0)
 

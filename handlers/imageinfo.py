@@ -1,3 +1,4 @@
+# <Leila code>
 class ImageInfo:
 
     def __init__(self, center, size, radius=0, life=None, animated=False):
@@ -24,3 +25,4 @@ class ImageInfo:
 
     def get_animated(self):
         return self.animated
+# </Leila code>
