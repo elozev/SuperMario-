@@ -3,33 +3,10 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
-from animators.background import Background
 from constants import Constants
-from handlers.keyboard import Keyboard
-from animators.screen import Screen
+from state import State
 
-WIDTH = Constants.WIDTH
-HEIGHT = Constants.HEIGHT
+frame = simplegui.create_frame("SuperMario-", Constants.WIDTH, Constants.HEIGHT)
 
-
-def draw_handler(canvas):
-    bg.animate_background(canvas)
-    sc.animate(canvas)
-
-    bg.update_bg(kb.background_movement())
-    sc.update(kb.background_movement(), canvas)
-
-
-img = "https://i.imgur.com/uYaDwBC.jpg"
-
-bg = Background(img, WIDTH, HEIGHT)
-sc = Screen(bg)
-kb = Keyboard()
-
-
-frame = simplegui.create_frame("SuperMario-", WIDTH, HEIGHT)
-frame.set_draw_handler(draw_handler)
-frame.set_keydown_handler(kb.keydown_handler)
-frame.set_keyup_handler(kb.keyup_handler)
-frame.set_mouseclick_handler(sc.ms.click_handler)
-frame.start()
+state = State(frame)
+state.load_start_screen()
