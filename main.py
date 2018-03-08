@@ -3,10 +3,10 @@ try:
 except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
-from background import Background
+from animators.background import Background
 from constants import Constants
-from keyboard import Keyboard
-from screen import Screen
+from handlers.keyboard import Keyboard
+from animators.screen import Screen
 
 WIDTH = Constants.WIDTH
 HEIGHT = Constants.HEIGHT

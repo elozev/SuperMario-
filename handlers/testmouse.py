@@ -1,4 +1,4 @@
-from vector import Vector
+from player.vector import Vector
 
 
 class Mouse:
