@@ -11,7 +11,7 @@ class Screen:
         self.canvas = 0
         self.screen_loader = ScreenLoader()
 
-        self.obstacles = self.generate_new_obstacles(500)
+        self.obstacles = self.generate_new_obstacles(Constants.WIDTH * 2)
         self.screen_objects = self.generate_clouds()
         self.background = background
 
@@ -41,15 +41,14 @@ class Screen:
         # checks is more obstacles are needed and generates if so
         self.check_distance_traveled()
         self.test_ball.update(offset, self.is_background_moving)
-        self.move_bg_after_hero_is_middle()
+        self.move_bg_after_hero_is_middle(offset)
 
-    # TODO: remove callings from ifs
-    def move_bg_after_hero_is_middle(self):
+    def move_bg_after_hero_is_middle(self, offset):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
         move_screen_with = 0
 
         self.is_background_moving = self.test_ball.pos.x + ball_rad_line_w > Constants.WIDTH / 2 + 50 and not self.block_background_movement
-        if self.is_background_moving:
+        if self.is_background_moving and offset[1] == Constants.ORIENTATION_RIGHT:
             move_screen_with = 10
 
         self.update_screen_objects(move_screen_with)
@@ -72,7 +71,7 @@ class Screen:
                     self.block_background_movement = False
 
     def check_distance_traveled(self):
-        if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH:
+        if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - 2.5 * Constants.WIDTH:
             self.obstacles.extend(self.generate_new_obstacles(self.background.get_progress()))
 
     def check_clouds_enough(self):
