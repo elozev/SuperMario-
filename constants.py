@@ -1,6 +1,11 @@
 class Constants:
-    BACKGROUND_IMAGE = "https://i.imgur.com/uYaDwBC.jpg"
+    ORIENTATION_NONE = "orientation-none"
+    ORIENTATION_UP = "orientation-up"
+    ORIENTATION_DOWN = "orientation-down"
+    ORIENTATION_LEFT = "orientation-left"
+    ORIENTATION_RIGHT = "orientation-right"
 
+    BACKGROUND_IMAGE = "https://i.imgur.com/uYaDwBC.jpg"
     GROUND_HEIGHT = 130
     WIDTH = 800
     HEIGHT = 800
@@ -19,11 +24,8 @@ class Constants:
     CLOUD = "https://i.imgur.com/ueJ91rY.png"
     FALL_BLOCK = "https://i.imgur.com/V1jvSaE.png"
 
-    TYPE_PIPE = "pipe"
-    TYPE_BLOCK = "block"
-    TYPE_FALL_BLOCK = "fall-block"
-
     TOP_COLLISION = "TOP_COLLISION"
     BOTTOM_COLLISION = "BOTTOM_COLLISION"
     LEFT_COLLISION = "LEFT_COLLISION"
     RIGHT_COLLISION = "RIGHT_COLLISION"
+    NONE_COLLISION = "NONE_COLLISION"

@@ -20,17 +20,14 @@ class State:
         self.frame.start()
 
     def draw_handler(self, canvas):
-        self.bg.animate_background(canvas)
         self.sc.animate(canvas)
-
-        self.bg.update_bg(self.kb.background_movement())
-        self.sc.update(self.kb.background_movement(), canvas)
+        self.sc.update(self.kb.background_movement())
 
     def load_playground(self):
         self.frame.set_draw_handler(self.draw_handler)
         self.frame.set_keydown_handler(self.kb.keydown_handler)
         self.frame.set_keyup_handler(self.kb.keyup_handler)
-        self.frame.set_mouseclick_handler(self.sc.ms.click_handler)
+        # self.frame.set_mouseclick_handler(self.sc.ms.click_handler)
         # self.frame.start()
 
     def game_over(self):

@@ -39,6 +39,8 @@ class ScreenObjects:
     def get_scaled_img_w(self):
         return self.scaled_img_w + self.margin
 
+    def __eq__(self, other):
+        return self.animate_at_w == other.animate_at_w
 
 class Obstacle(ScreenObjects):
 
