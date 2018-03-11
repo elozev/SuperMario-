@@ -1,4 +1,5 @@
 class Constants:
+    SCREEN_MOVEMENT_SPEED = 10
     ORIENTATION_NONE = "orientation-none"
     ORIENTATION_UP = "orientation-up"
     ORIENTATION_DOWN = "orientation-down"

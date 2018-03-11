@@ -36,6 +36,7 @@ class Screen:
         # moving ball
         self.test_ball.animate(canvas)
         self.canvas = canvas
+        self.animate_text(canvas)
 
     def update(self, offset):
         # checks is more obstacles are needed and generates if so
@@ -43,14 +44,13 @@ class Screen:
         self.test_ball.update(offset, self.is_background_moving)
         self.move_bg_after_hero_is_middle()
 
-    # TODO: remove callings from ifs
     def move_bg_after_hero_is_middle(self):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
         move_screen_with = 0
 
         self.is_background_moving = self.test_ball.pos.x + ball_rad_line_w > Constants.WIDTH / 2 + 50 and not self.block_background_movement
         if self.is_background_moving:
-            move_screen_with = 10
+            move_screen_with = Constants.SCREEN_MOVEMENT_SPEED
 
         self.update_screen_objects(move_screen_with)
 
@@ -84,3 +84,9 @@ class Screen:
 
     def generate_clouds(self):
         return self.screen_loader.load_clouds()
+
+    def animate_text(self, canvas):
+        canvas.draw_text("Lives", [50, 50], 22, "White", "sans-serif")
+        canvas.draw_text("Score", [680, 50], 22, "White", "sans-serif")
+        canvas.draw_text(str(0), [50, 80], 22, "White", "sans-serif")
+        canvas.draw_text(str(0), [680, 80], 22, "White", "sans-serif")

@@ -19,12 +19,12 @@ class Keyboard:
 
     def background_movement(self):
         if self.current_key == simplegui.KEY_MAP["left"]:
-            return -10, Constants.ORIENTATION_LEFT
+            return -Constants.SCREEN_MOVEMENT_SPEED, Constants.ORIENTATION_LEFT
         elif self.current_key == simplegui.KEY_MAP["right"]:
-            return 10, Constants.ORIENTATION_RIGHT
+            return Constants.SCREEN_MOVEMENT_SPEED, Constants.ORIENTATION_RIGHT
         elif self.current_key == simplegui.KEY_MAP["up"]:
-            return -10, Constants.ORIENTATION_UP
+            return -Constants.SCREEN_MOVEMENT_SPEED, Constants.ORIENTATION_UP
         elif self.current_key == simplegui.KEY_MAP["down"]:
-            return 10, Constants.ORIENTATION_DOWN
+            return Constants.SCREEN_MOVEMENT_SPEED, Constants.ORIENTATION_DOWN
         else:
             return 0, Constants.ORIENTATION_NONE
