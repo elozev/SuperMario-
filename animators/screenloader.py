@@ -27,7 +27,7 @@ class ScreenLoader:
         if r == 1:
             return Obstacle(Constants.GREEN_PIPE, 6, Constants.BASE, self.obstacles_distance_between)
         elif r == 2:
-            return Obstacle(Constants.QUESTION_BLOCK, 30, Constants.BLOCKS_POSITION,
+            return Obstacle(Constants.QUESTION_BLOCK, 5, Constants.BLOCKS_POSITION,
                             self.obstacles_distance_between)
         elif r == 3:
             return Obstacle(Constants.THREE_BLOCK_QUESTION, 3, Constants.BLOCKS_POSITION,

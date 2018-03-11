@@ -43,7 +43,6 @@ class Screen:
         self.test_ball.update(offset, self.is_background_moving)
         self.move_bg_after_hero_is_middle()
 
-    # TODO: remove callings from ifs
     def move_bg_after_hero_is_middle(self):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
         move_screen_with = 0
