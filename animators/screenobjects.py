@@ -15,7 +15,7 @@ class ScreenObjects:
         self.scaled_img_h = self.img_h / scale
         self.base = base
         self.animate_at_w = start_at
-        self.margin = 150
+        self.margin = 350
 
     def animate(self, canvas):
         canvas.draw_image(self.img,
