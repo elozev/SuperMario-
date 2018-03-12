@@ -48,6 +48,7 @@ class Collision:
         elif ob.type == Constants.QUESTION_BLOCK:
             if self.determine_collision_location(ob, ball) == Constants.BOTTOM_COLLISION:
                 print(10 * "POWER UP ")
+
         # TODO generate moving mushroom from there or coin
         elif ob.type == Constants.THREE_BLOCK_QUESTION:
             if self.determine_collision_location(ob, ball) == Constants.BOTTOM_COLLISION:

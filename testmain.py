@@ -9,7 +9,7 @@ def handler(canvas):
     coin.update()
 
 
-coin = Coin("")
+coin = Coin()
 
 frame = simplegui.create_frame("TEST", Constants.WIDTH, Constants.HEIGHT)
 frame.set_draw_handler(handler)
