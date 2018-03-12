@@ -9,12 +9,12 @@ class Coin:
     ROWS = 1
     URL = "https://i.imgur.com/K6pxBXz.png"
 
-    def __init__(self, url):
+    def __init__(self):
         self.image = simplegui.load_image(Coin.URL)
         self.image_w = self.image.get_width()
         self.image_h = self.image.get_height()
-        self.pos = Vector(Constants.WIDTH / 2, Constants.HEIGHT / 2)
-        self.max_upwards_position = self.pos.y - 20
+        self.pos = Vector(Constants.WIDTH, Constants.HEIGHT)
+        self.max_upwards_position = self.pos.y - 150
         self.original_downwards_position = self.pos.y
         self.is_going_up = True
 
@@ -30,12 +30,9 @@ class Coin:
 
     def update(self):
         if self.is_going_up:
-            if self.pos.y >= self.max_upwards_position:
-                self.is_going_up = not self.is_going_up
-            self.pos.y -= 1
+            if self.pos.y <= self.max_upwards_position:
+                self.is_going_up = False
+            self.pos.y -= 5
         else:
             if self.pos.y <= self.original_downwards_position:
-                self.pos.y += 1
-
-    def frame_index(self):
-        pass
+                self.pos.y += 5
