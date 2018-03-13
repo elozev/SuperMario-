@@ -1,3 +1,5 @@
+from player.vector import Vector
+
 try:
     import simplegui
 except ImportError:
@@ -42,11 +44,20 @@ class ScreenObjects:
     def __eq__(self, other):
         return self.animate_at_w == other.animate_at_w
 
+    def get_pos(self):
+        return Vector(self.animate_at_w, self.base)
 
 class Obstacle(ScreenObjects):
 
     def __init__(self, img_url, scale, base, start_at):
         super(Obstacle, self).__init__(img_url, scale, base, start_at)
+        self.power_up_activated = False
 
     def update(self, offset):
         self.animate_at_w -= offset
+
+    def set_power_up_activated(self):
+        self.power_up_activated = True
+
+    def get_power_up_activated(self):
+        return self.power_up_activated

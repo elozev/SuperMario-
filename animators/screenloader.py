@@ -1,8 +1,8 @@
 import random
 
-from constants import Constants
 from animators.screenobjects import Obstacle
 from animators.screenobjects import ScreenObjects
+from constants import Constants
 
 
 class ScreenLoader:

@@ -40,16 +40,21 @@ class Collision:
         elif right_c < top_c and right_c < bottom_c and right_c < left_c:
             return Constants.RIGHT_COLLISION
 
-    def trigger_action(self, ob, ball):
+    def trigger_action(self, ob, ball, screen):
         if ob.type == Constants.FALL_BLOCK:
             if self.determine_collision_location(ob, ball) == Constants.TOP_COLLISION:
                 print(10 * "GAME OVER ")
+
         # TODO trigger game over
         elif ob.type == Constants.QUESTION_BLOCK:
-            if self.determine_collision_location(ob, ball) == Constants.BOTTOM_COLLISION:
+            if self.determine_collision_location(ob, ball) == Constants.BOTTOM_COLLISION and not ob.get_power_up_activated():
+                ob.set_power_up_activated()
+                screen.generate_coin(ob.get_pos())
                 print(10 * "POWER UP ")
         # TODO generate moving mushroom from there or coin
         elif ob.type == Constants.THREE_BLOCK_QUESTION:
-            if self.determine_collision_location(ob, ball) == Constants.BOTTOM_COLLISION:
+            if self.determine_collision_location(ob, ball) == Constants.BOTTOM_COLLISION and not ob.get_power_up_activated():
                 print(10 * "POWER UP 3")
+                ob.set_power_up_activated()
+                screen.generate_coin(ob.get_pos())
         # TODO generate moving mushroom if the hit is in the middle or coin
