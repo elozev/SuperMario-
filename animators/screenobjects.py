@@ -47,6 +47,7 @@ class ScreenObjects:
     def get_pos(self):
         return Vector(self.animate_at_w, self.base)
 
+
 class Obstacle(ScreenObjects):
 
     def __init__(self, img_url, scale, base, start_at):
