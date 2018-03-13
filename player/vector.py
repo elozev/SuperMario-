@@ -21,7 +21,7 @@ class Vector:
         self.y += other.y
         return self
 
-    def substract(self, other):
+    def subtract(self, other):
         self.x -= other.x
         self.y -= other.y
         return self

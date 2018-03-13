@@ -1,3 +1,4 @@
+from animators.coin import Coin
 from animators.screenloader import ScreenLoader
 from animators.screenobjects import Obstacle
 from constants import Constants
@@ -8,6 +9,9 @@ from player.vector import Vector
 
 class Screen:
     def __init__(self, background):
+        self.lives = 3
+        self.score = 0
+
         self.canvas = 0
         self.screen_loader = ScreenLoader()
 
@@ -25,6 +29,8 @@ class Screen:
         self.ball_blocked_by_ob.animate_at_w = 0
         self.is_background_moving = True
 
+        self.power_ups = []
+
     def animate(self, canvas):
         # background
         self.background.animate_background(canvas)
@@ -37,12 +43,18 @@ class Screen:
         self.test_ball.animate(canvas)
         self.canvas = canvas
         self.animate_text(canvas)
+        for pu in self.power_ups:
+            pu.animate(canvas)
 
     def update(self, offset):
         # checks is more obstacles are needed and generates if so
         self.check_distance_traveled()
         self.test_ball.update(offset, self.is_background_moving)
         self.move_bg_after_hero_is_middle()
+
+        for pu in self.power_ups:
+            if not pu.get_hide_image():
+                pu.update()
 
     def move_bg_after_hero_is_middle(self):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
@@ -62,7 +74,7 @@ class Screen:
             ob.update(offset)
             if self.collision_handler.is_colliding_with_ball(ob, self.test_ball, self.canvas):
                 collision_where = self.collision_handler.determine_collision_location(ob, self.test_ball)
-                self.collision_handler.trigger_action(ob, self.test_ball)
+                self.collision_handler.trigger_action(ob, self.test_ball, self)
 
                 self.test_ball.set_collision_where(collision_where)
                 self.block_background_movement = True
@@ -85,8 +97,18 @@ class Screen:
     def generate_clouds(self):
         return self.screen_loader.load_clouds()
 
+    def add_coin_for_animation(self):
+        pass
+
+    def add_points_to_score(self, points):
+        self.score += points
+
+    def generate_coin(self, pos):
+        self.power_ups.append(Coin(pos))
+        self.add_points_to_score(100)
+
     def animate_text(self, canvas):
         canvas.draw_text("Lives", [50, 50], 22, "White", "sans-serif")
         canvas.draw_text("Score", [680, 50], 22, "White", "sans-serif")
-        canvas.draw_text(str(0), [50, 80], 22, "White", "sans-serif")
-        canvas.draw_text(str(0), [680, 80], 22, "White", "sans-serif")
+        canvas.draw_text(str(self.lives), [50, 80], 22, "White", "sans-serif")
+        canvas.draw_text(str(self.score), [680, 80], 22, "White", "sans-serif")
