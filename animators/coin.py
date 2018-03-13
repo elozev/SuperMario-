@@ -9,12 +9,10 @@ class Coin:
     URL = "https://i.imgur.com/K6pxBXz.png"
 
     def __init__(self, pos):
+        self.pos = pos
         self.image = simplegui.load_image(Coin.URL)
         self.image_w = self.image.get_width()
         self.image_h = self.image.get_height()
-
-        self.pos = pos
-
         self.vel = Vector(0, 5)
         self.max_upwards_position = self.pos.y - 150
         self.original_downwards_position = self.pos.y
@@ -26,7 +24,7 @@ class Coin:
             canvas.draw_image(self.image,
                               (self.image_w / 2, self.image_h / 2),
                               (self.image_w, self.image_h),
-                              (self.pos.x / 2, self.pos.y / 2),
+                              (self.pos.x / 2, self.pos.y - 50),
                               (50, 50))
 
     def update(self):
