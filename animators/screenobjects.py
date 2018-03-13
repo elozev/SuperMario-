@@ -42,6 +42,7 @@ class ScreenObjects:
     def __eq__(self, other):
         return self.animate_at_w == other.animate_at_w
 
+
 class Obstacle(ScreenObjects):
 
     def __init__(self, img_url, scale, base, start_at):
