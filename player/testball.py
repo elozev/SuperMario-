@@ -61,17 +61,27 @@ class Grenade(TestBall):
 
     def __init__(self, pos, rad, line_width, col, ground, vel=Vector(0, 0)):
         super(Grenade, self).__init__(pos, rad, line_width, col, vel)
+        self.line_x = Constants.WIDTH - 300
         self.going_down = True
         self.ground = ground
-        self.gravity = 0.98
-        self.vel.x = 4
+        self.falling_into_block = False
+
+    def draw_ball(self, canvas):
+        super(Grenade, self).draw_ball(canvas)
+        # self.draw_line(canvas)
 
     def update_grenade(self):
-        if self.going_down:
-            self.update_downwards()
+        if not self.falling_into_block:
+            if self.going_down:
+                self.update_downwards()
+            else:
+                self.update_upwards()
+
+            if self.is_stanionary():
+                pass
+                # TODO: explosion
         else:
-            self.update_upwards()
-        print(self.vel.x)
+            self.pos.add(self.vel)
 
     def update_downwards(self):
         if self.pos.y < Constants.HEIGHT - self.ground:
@@ -83,10 +93,40 @@ class Grenade(TestBall):
             self.vel.x *= -1
 
     def update_upwards(self):
-        if self.vel.y >= 0.01:
+        if self.vel.y >= 0.5:
             self.vel.y -= .8
             self.vel.divide(1.005)
-            self.pos.substract(self.vel)
+            self.pos.subtract(self.vel)
         else:
+            self.going_down = True
+            self.vel.x *= -1
+
+    def update_grenade_pos(self, offset):
+        offset /= 2
+        if self.pos.x < 0:
+            self.pos.x += offset
+        else:
+            self.pos.x -= offset
+
+    def is_stanionary(self):
+        if self.vel.x < 0:
+            return self.vel.x * -1 < 0.6
+        else:
+            return self.vel.x < 0.6
+
+    def set_falling_into_block(self):
+        self.falling_into_block = True
+
+    def draw_line(self, canvas):
+        canvas.draw_line((self.line_x, 0), (self.line_x, Constants.HEIGHT), 5, 'green')
+
+    def check_collision(self, bounder):
+        if self.pos.x + self.rad + self.line_width >= bounder:
+            self.vel.x *= -1
+
+    def bounce_off(self, collision_where):
+        if collision_where == Constants.RIGHT_COLLISION or collision_where == Constants.LEFT_COLLISION:
+            self.vel.x *= -1
+        elif collision_where == Constants.TOP_COLLISION:
             self.going_down = True
             self.vel.x *= -1

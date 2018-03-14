@@ -9,7 +9,7 @@ class Vector:
 
     # get tuple of vector
     def getP(self):
-        return (self.x, self.y)
+        return self.x, self.y
 
     # point vector to opposite direction
     def negate(self):

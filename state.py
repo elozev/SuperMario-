@@ -3,6 +3,7 @@ from animators.screen import Screen
 from animators.startscreenloader import StartScreenLoader
 from constants import Constants
 from handlers.keyboard import Keyboard
+from handlers.mouse import Mouse
 
 
 class State:
@@ -13,6 +14,7 @@ class State:
         self.bg = Background(Constants.BACKGROUND_IMAGE, Constants.WIDTH, Constants.HEIGHT)
         self.sc = Screen(self.bg)
         self.start_screen = StartScreenLoader(self)
+        self.ms = Mouse(self.sc)
 
     def load_start_screen(self):
         self.frame.set_mouseclick_handler(self.start_screen.click)
@@ -27,6 +29,7 @@ class State:
         self.frame.set_draw_handler(self.draw_handler)
         self.frame.set_keydown_handler(self.kb.keydown_handler)
         self.frame.set_keyup_handler(self.kb.keyup_handler)
+        self.frame.set_mouseclick_handler(self.ms.click_handler)
         # self.frame.set_mouseclick_handler(self.sc.ms.click_handler)
         # self.frame.start()
 

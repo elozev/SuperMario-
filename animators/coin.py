@@ -38,5 +38,8 @@ class Coin:
             else:
                 self.hide_image = True
 
+    def update_pos(self, offset):
+        self.pos.x -= offset
+
     def get_hide_image(self):
         return self.hide_image

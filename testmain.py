@@ -11,7 +11,7 @@ def handler(canvas):
 
 
 pos = Vector(50, Constants.HEIGHT / 2)
-grenade = Grenade(pos, 10, 2, 'RED', 100, Vector(0, 10))
+grenade = Grenade(pos, 10, 2, 'RED', 100, Vector(3, 10))
 
 frame = simplegui.create_frame("TEST", Constants.WIDTH, Constants.HEIGHT)
 frame.set_draw_handler(handler)

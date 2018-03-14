@@ -3,7 +3,7 @@ from animators.screenloader import ScreenLoader
 from animators.screenobjects import Obstacle
 from constants import Constants
 from player.collision import Collision
-from player.testball import TestBall
+from player.testball import TestBall, Grenade
 from player.vector import Vector
 
 
@@ -19,7 +19,7 @@ class Screen:
         self.screen_objects = self.generate_clouds()
         self.background = background
 
-        self.test_ball = TestBall(Vector(400, 400), 30, 2, 'red')
+        self.test_ball = TestBall(Vector(Constants.WIDTH / 2, Constants.HEIGHT / 2), 30, 2, 'red')
 
         self.collision_handler = Collision()
 
@@ -30,6 +30,7 @@ class Screen:
         self.is_background_moving = True
 
         self.power_ups = []
+        self.grenades = []
 
     def animate(self, canvas):
         # background
@@ -46,6 +47,9 @@ class Screen:
         for pu in self.power_ups:
             pu.animate(canvas)
 
+        for gr in self.grenades:
+            gr.draw_ball(canvas)
+
     def update(self, offset):
         # checks is more obstacles are needed and generates if so
         self.check_distance_traveled()
@@ -56,6 +60,9 @@ class Screen:
             if not pu.get_hide_image():
                 pu.update()
 
+        for gr in self.grenades:
+            gr.update_grenade()
+
     def move_bg_after_hero_is_middle(self):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
         move_screen_with = 0
@@ -65,6 +72,8 @@ class Screen:
             move_screen_with = Constants.SCREEN_MOVEMENT_SPEED
 
         self.update_screen_objects(move_screen_with)
+        self.update_power_ups(move_screen_with)
+        self.update_grenade_pos(move_screen_with)
 
     def update_screen_objects(self, offset):
         self.background.update_bg(offset)
@@ -82,6 +91,13 @@ class Screen:
             else:
                 if self.ball_blocked_by_ob == ob:
                     self.block_background_movement = False
+
+            for gr in self.grenades:
+                if self.collision_handler.is_colliding_with_ball(ob, gr, self.canvas):
+                    collision_where = self.collision_handler.determine_collision_location(ob, gr)
+                    self.collision_handler.grenade_collision_handler(ob, gr)
+                    gr.bounce_off(collision_where)
+
 
     def check_distance_traveled(self):
         if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH:
@@ -112,3 +128,18 @@ class Screen:
         canvas.draw_text("Score", [680, 50], 22, "White", "sans-serif")
         canvas.draw_text(str(self.lives), [50, 80], 22, "White", "sans-serif")
         canvas.draw_text(str(self.score), [680, 80], 22, "White", "sans-serif")
+
+    def generate_grenade(self):
+        gr = Grenade(
+            Vector(self.test_ball.pos.x + self.test_ball.rad + self.test_ball.line_width + 5, self.test_ball.pos.y),
+            5, 1, 'black', Constants.HEIGHT - (Constants.BASE + 45), Vector(4, 10))
+        self.grenades.append(gr)
+
+    def update_power_ups(self, move_screen_with):
+        for pu in self.power_ups:
+            if not pu.get_hide_image():
+                pu.update_pos(move_screen_with)
+
+    def update_grenade_pos(self, move_screen_with):
+        for gr in self.grenades:
+            gr.update_grenade_pos(move_screen_with)

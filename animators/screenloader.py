@@ -54,3 +54,4 @@ class ScreenLoader:
 
     def get_obstacles_distance_traveled(self):
         return self.obstacles_distance_between
+
