@@ -63,16 +63,21 @@ class TestBall:
         #     self.pos.x -= 1
 
         self.collision_where = Constants.NONE_COLLISION
-        self.update_pos()
+        self.update_mario()
 
-    def update_pos(self):
-        self.pos.add(self.vel)
-        # if self.jumping:
+    def update_mario(self):
+        self.update_pos()
         self.vel.y += Constants.GRAVITY
         if self.pos.y >= self.ground:
             self.jumping = False
             self.vel.y = 0
             self.pos.y = self.ground
+
+    def update_pos(self):
+        self.pos.add(self.vel)
+
+    def update_with_offset(self, offset):
+        self.pos.x -= offset
 
     def update_on_key_down(self, key):
         if key == simplegui.KEY_MAP["up"]:
@@ -106,7 +111,8 @@ class TestBall:
     def is_stanionary(self):
         return self.vel.x == 0 and self.vel.y == 0
 
-    def distance_to(self, first, second):
+    @staticmethod
+    def distance_to(first, second):
         return math.sqrt(math.pow(second.pos.x - first.pos.x, 2) + math.pow(second.pos.y - first.pos.y, 2))
 
 
@@ -114,6 +120,7 @@ class Grenade(TestBall):
 
     def __init__(self, pos, rad, line_width, col, ground, vel=Vector(0, 0)):
         super(Grenade, self).__init__(pos, rad, line_width, col, ground, vel)
+        self.has_exploded = False
         self.line_x = Constants.WIDTH - 300
         self.going_down = True
         self.ground = ground
@@ -124,17 +131,18 @@ class Grenade(TestBall):
         # self.draw_line(canvas)
 
     def update_grenade(self):
-        if not self.falling_into_block:
-            if self.going_down:
-                self.update_downwards()
-            else:
-                self.update_upwards()
+        if not self.has_exploded:
+            if not self.falling_into_block:
+                if self.going_down:
+                    self.update_downwards()
+                else:
+                    self.update_upwards()
 
-            if self.is_stanionary():
-                pass
-                # TODO: explosion
-        else:
-            self.pos.add(self.vel)
+                if self.is_stanionary():
+                    self.explode()
+
+            else:
+                self.pos.add(self.vel)
 
     def update_downwards(self):
         if self.pos.y < Constants.HEIGHT - self.ground:
@@ -155,11 +163,12 @@ class Grenade(TestBall):
             self.vel.x *= -1
 
     def update_grenade_pos(self, offset):
-        offset /= 2
-        if self.pos.x < 0:
-            self.pos.x += offset
-        else:
-            self.pos.x -= offset
+        if not self.has_exploded:
+            offset /= 2
+            if self.pos.x < 0:
+                self.pos.x += offset
+            else:
+                self.pos.x -= offset
 
     def is_stanionary(self):
         if self.vel.x < 0:
@@ -183,3 +192,9 @@ class Grenade(TestBall):
         elif collision_where == Constants.TOP_COLLISION:
             self.going_down = True
             self.vel.x *= -1
+
+    def explode(self):
+        self.vel = Vector(0, 0)
+        self.pos = Vector(-2000, -2000)
+        self.has_exploded = True
+

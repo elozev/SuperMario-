@@ -1,4 +1,5 @@
 from constants import Constants
+from player.testball import TestBall
 from player.vector import Vector
 
 
@@ -9,14 +10,18 @@ class Collision:
         box_pos_y = obstacle.base - obstacle.scaled_img_h / 2
 
         # draw polygon around the obstacle
-        canvas.draw_polygon([(box_pos_x, box_pos_y), (box_pos_x + obstacle.scaled_img_w, box_pos_y),
-                             (box_pos_x + obstacle.scaled_img_w, box_pos_y + obstacle.scaled_img_h),
-                             (box_pos_x, box_pos_y + obstacle.scaled_img_h)], 2, 'Green')
+        # canvas.draw_polygon([(box_pos_x, box_pos_y), (box_pos_x + obstacle.scaled_img_w, box_pos_y),
+        #                      (box_pos_x + obstacle.scaled_img_w, box_pos_y + obstacle.scaled_img_h),
+        #                      (box_pos_x, box_pos_y + obstacle.scaled_img_h)], 2, 'Green')
 
         return ball.pos.x + ball.rad > box_pos_x and \
                ball.pos.y + ball.rad > box_pos_y and \
                ball.pos.x - ball.rad < box_pos_x + obstacle.scaled_img_w and \
                ball.pos.y - ball.rad < box_pos_y + obstacle.scaled_img_h
+
+    def two_ball_collision(self, ball_1, ball_2):
+        return TestBall.distance_to(ball_1, ball_2) - (
+                ball_1.rad + ball_1.line_width + ball_2.rad + ball_2.line_width) <= 0
 
     def determine_collision_location(self, obstacle, ball):
         box_pos_x = obstacle.animate_at_w / 2 - obstacle.scaled_img_w / 2
@@ -43,27 +48,31 @@ class Collision:
 
     def trigger_action(self, ob, ball, screen):
         if ob.type == Constants.FALL_BLOCK:
+            print("FALL_BLOCK" * 10)
             if self.determine_collision_location(ob, ball) == Constants.TOP_COLLISION:
-                print(10 * "GAME OVER ")
-
-        # TODO trigger game over
+                print("GAME OVER" * 10)
+                screen.state.game_over(screen.progress, screen.score)
         elif ob.type == Constants.QUESTION_BLOCK:
             if self.determine_collision_location(ob,
                                                  ball) == Constants.BOTTOM_COLLISION and not ob.get_power_up_activated():
                 ob.set_power_up_activated()
                 screen.generate_coin(ob.get_pos())
-                print(10 * "POWER UP ")
-        # TODO generate moving mushroom from there or coin
+                # print(10 * "POWER UP ")
         elif ob.type == Constants.THREE_BLOCK_QUESTION:
             if self.determine_collision_location(ob,
                                                  ball) == Constants.BOTTOM_COLLISION and not ob.get_power_up_activated():
-                print(10 * "POWER UP 3")
+                # print(10 * "POWER UP 3")
                 ob.set_power_up_activated()
                 screen.generate_coin(ob.get_pos())
-        # TODO generate moving mushroom if the hit is in the middle or coin
 
     def grenade_collision_handler(self, ob, ball):
         if ob.type == Constants.FALL_BLOCK:
             if self.determine_collision_location(ob, ball) == Constants.TOP_COLLISION:
                 ball.set_falling_into_block()
                 ball.vel = Vector(ball.vel.x, 20)
+
+    def enemy_collision_handler(self, ob, en):
+        if ob.type == Constants.FALL_BLOCK:
+            if self.determine_collision_location(ob, en.ball) == Constants.TOP_COLLISION:
+                en.ball.vel = Vector(en.ball.vel.x, 20)
+                en.vel = en.ball.vel
