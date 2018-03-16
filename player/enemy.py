@@ -27,25 +27,26 @@ class Enemy:
     y = 3 * 391 / 4
 
     def __init__(self, row, column, Goomba_image, scale, pos):
+        self.is_death = False
         self.column = column
         self.row = row
         self.Goomba_image = Goomba_image
         self.Image_height = self.Goomba_image.get_height()
         self.scale = scale
         self.pos = pos
-        self.vel = Vector(1, 0)
+        self.vel = Vector(-1, 0)
         self.counter = 0
-        self.ball = TestBall(self.pos, self.Goomba_image.get_height() / 2, 1, 'rgba(0, 0, 0, 0)', self.pos.x, self.vel)
+        self.ball = TestBall(self.pos, self.Goomba_image.get_height() / 2, 1, 'rgba(0, 0, 0, 0.5)', self.pos.x, self.vel)
+        self.time = 0
 
-    # define draw handeler
+    # define draw handler
     def draw(self, canvas):
-        global x, time, Image_center, Image_number
 
         self.counter += 1
         if self.counter % 20 == 0:
-            time = (time + 1) % (Enemy.Image_number[0] + Enemy.Image_number[1])
+            self.time = (self.time + 1) % (Enemy.Image_number[0] + Enemy.Image_number[1])
 
-        curr_goomba_index = [time % Enemy.Image_number[1], time // Enemy.Image_number[1]]
+        curr_goomba_index = [self.time % Enemy.Image_number[1], self.time // Enemy.Image_number[1]]
 
         scaled_image = (Enemy.Image_size[0] * self.scale, Enemy.Image_size[1] * self.scale)
         canvas.draw_image(Enemy.Goomba_image, [Enemy.Image_center[0] + curr_goomba_index[0] * Enemy.Image_size[0],
@@ -53,26 +54,40 @@ class Enemy:
                           Enemy.Image_size, self.pos.getP(), scaled_image)
 
         self.ball.draw_ball(canvas)
-        self.update()
 
     def update(self):
-        self.pos.add(self.vel)
-        self.ball.vel = self.vel
-        self.ball.update_mario()
+        if not self.is_death:
+            self.pos.add(self.vel)
+            self.ball.vel = self.vel
+            self.ball.update_pos()
 
+    def update_pos(self, offset):
+        if not self.is_death:
+            offset /= 4
+            self.pos.x -= offset
+            self.ball.update_with_offset(offset)
 
-en = Enemy(Enemy.Row, Enemy.column, Enemy.Goomba_image, 2, Vector(50, Constants.HEIGHT / 2))
+    def reflect_movement(self):
+        self.vel = Vector(self.vel.x * -1, self.vel.y)
 
-# define frame +reg draw handler
-screen = simplegui.create_frame("goomba sprite spice!!!!!!!!", Enemy.BACK_WIDTH, Enemy.BACK_HEIGHT)
-screen.set_draw_handler(en.draw)
-screen.set_canvas_background("Blue")
-time = 0
-# generate a goomba
+    def die(self):
+        self.vel = Vector(0, 0)
+        self.pos = Vector(-1000, -1000)
+        self.ball.pos = Vector(-1000, -1000)
+        self.is_death = True
 
-# timercount = simplegui.create_timer(200, en.timercount_handler)
-# timercount.start()
-
-screen.start()
-
-# </Arash code>
+# en = Enemy(Enemy.Row, Enemy.column, Enemy.Goomba_image, 2, Vector(50, Constants.HEIGHT / 2))
+#
+# # define frame +reg draw handler
+# screen = simplegui.create_frame("goomba sprite spice!!!!!!!!", Enemy.BACK_WIDTH, Enemy.BACK_HEIGHT)
+# screen.set_draw_handler(en.draw)
+# screen.set_canvas_background("Blue")
+# time = 0
+# # generate a goomba
+#
+# # timercount = simplegui.create_timer(200, en.timercount_handler)
+# # timercount.start()
+#
+# screen.start()
+#
+# # </Arash code>

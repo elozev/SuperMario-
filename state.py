@@ -13,7 +13,7 @@ class State:
     def __init__(self, frame):
         self.frame = frame
         ground = Constants.GROUND_FOR_BALL
-        self.test_ball = TestBall(Vector(Constants.WIDTH / 2, ground), 10, 2, 'blue', ground)
+        self.test_ball = TestBall(Vector(100, ground), 10, 2, 'blue', ground)
         self.kb = Keyboard(self.test_ball)
         self.bg = Background(Constants.BACKGROUND_IMAGE, Constants.WIDTH, Constants.HEIGHT)
         self.sc = Screen(self.bg, self.test_ball)

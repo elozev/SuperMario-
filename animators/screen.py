@@ -3,13 +3,14 @@ from animators.screenloader import ScreenLoader
 from animators.screenobject import Obstacle
 from constants import Constants
 from player.collision import Collision
-from player.testball import TestBall, Grenade
+from player.enemy import Enemy
+from player.testball import Grenade
 from player.vector import Vector
 
 
 class Screen:
     def __init__(self, background, ball):
-        self.lives = 3
+        self.progress = 3
         self.score = 0
 
         self.canvas = 0
@@ -30,6 +31,7 @@ class Screen:
 
         self.power_ups = []
         self.grenades = []
+        self.enemies = []
 
     def animate(self, canvas):
         # background
@@ -49,12 +51,17 @@ class Screen:
         for gr in self.grenades:
             gr.draw_ball(canvas)
 
+        for en in self.enemies:
+            en.draw(canvas)
+
     def update(self, offset):
         # checks is more obstacles are needed and generates if so
         self.check_distance_traveled()
         self.check_clouds_enough()
         self.test_ball.update(offset, self.is_background_moving)
         self.move_bg_after_hero_is_middle(offset)
+
+        self.progress = int(round(self.background.get_progress() / 300))
 
         for pu in self.power_ups:
             if not pu.get_hide_image():
@@ -63,11 +70,13 @@ class Screen:
         for gr in self.grenades:
             gr.update_grenade()
 
+        for en in self.enemies:
+            en.update()
+
     def move_bg_after_hero_is_middle(self, offset):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
         move_screen_with = 0
-        #TODO: to be implemented
-        #is_right_key_pressed = offset[1] == Constants.ORIENTATION_RIGHT
+        # TODO: to be implemented
 
         self.is_background_moving = self.test_ball.pos.x + ball_rad_line_w > Constants.WIDTH / 2 + 50 and not self.block_background_movement
         if self.is_background_moving:
@@ -76,6 +85,7 @@ class Screen:
         self.update_screen_objects(move_screen_with)
         self.update_power_ups(move_screen_with)
         self.update_grenade_pos(move_screen_with)
+        self.update_enemies_pos(move_screen_with)
 
     def update_screen_objects(self, offset):
         self.background.update_bg(offset)
@@ -100,6 +110,22 @@ class Screen:
                     self.collision_handler.grenade_collision_handler(ob, gr)
                     gr.bounce_off(collision_where)
 
+            for en in self.enemies:
+                if self.collision_handler.is_colliding_with_ball(ob, en.ball, self.canvas):
+                    collision_where = self.collision_handler.determine_collision_location(ob, en.ball)
+                    self.collision_handler.enemy_collision_handler(ob, en)
+                    if collision_where == Constants.LEFT_COLLISION or collision_where == Constants.RIGHT_COLLISION:
+                        en.reflect_movement()
+                if self.collision_handler.two_ball_collision(en.ball, self.test_ball):
+                    print(10 * "GAME OVER")
+
+                for gr in self.grenades:
+                    if self.collision_handler.two_ball_collision(gr, en.ball):
+                        print("Enemy dies" * 10)
+                        en.die()
+                        gr.explode()
+                        self.add_points_to_score(200)
+
     def check_distance_traveled(self):
         if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH * 2:
             self.obstacles.extend(self.generate_new_obstacles(self.background.get_progress()))
@@ -107,9 +133,14 @@ class Screen:
     def check_clouds_enough(self):
         if self.background.get_progress() >= self.screen_loader.clouds_distance_traveled - Constants.WIDTH * 2:
             self.screen_objects.extend(self.generate_clouds())
+            self.generate_enemies()
 
     def generate_new_obstacles(self, start_at):
         return self.screen_loader.load_obstacles(start_at)
+
+    def generate_enemies(self):
+        self.enemies.append(Enemy(Enemy.Row, Enemy.column, Enemy.Goomba_image, 2,
+                                  Vector(Constants.WIDTH, Constants.GROUND_FOR_BALL)))
 
     def generate_clouds(self):
         return self.screen_loader.load_clouds()
@@ -124,7 +155,7 @@ class Screen:
     def animate_text(self, canvas):
         canvas.draw_text("Progress", [50, 50], 22, "White", "sans-serif")
         canvas.draw_text("Score", [680, 50], 22, "White", "sans-serif")
-        canvas.draw_text(str(self.lives), [50, 80], 22, "White", "sans-serif")
+        canvas.draw_text(str(self.progress), [50, 80], 22, "White", "sans-serif")
         canvas.draw_text(str(self.score), [680, 80], 22, "White", "sans-serif")
 
     def generate_grenade(self):
@@ -136,8 +167,12 @@ class Screen:
     def update_power_ups(self, move_screen_with):
         for pu in self.power_ups:
             if not pu.get_hide_image():
-                pu.update_mario(move_screen_with)
+                pu.update_pos(move_screen_with)
 
     def update_grenade_pos(self, move_screen_with):
         for gr in self.grenades:
             gr.update_grenade_pos(move_screen_with)
+
+    def update_enemies_pos(self, move_screen_with):
+        for en in self.enemies:
+            en.update_pos(move_screen_with)

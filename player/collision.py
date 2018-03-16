@@ -1,4 +1,5 @@
 from constants import Constants
+from player.testball import TestBall
 from player.vector import Vector
 
 
@@ -17,6 +18,10 @@ class Collision:
                ball.pos.y + ball.rad > box_pos_y and \
                ball.pos.x - ball.rad < box_pos_x + obstacle.scaled_img_w and \
                ball.pos.y - ball.rad < box_pos_y + obstacle.scaled_img_h
+
+    def two_ball_collision(self, ball_1, ball_2):
+        return TestBall.distance_to(ball_1, ball_2) - (
+                ball_1.rad + ball_1.line_width + ball_2.rad + ball_2.line_width) <= 0
 
     def determine_collision_location(self, obstacle, ball):
         box_pos_x = obstacle.animate_at_w / 2 - obstacle.scaled_img_w / 2
@@ -67,3 +72,9 @@ class Collision:
             if self.determine_collision_location(ob, ball) == Constants.TOP_COLLISION:
                 ball.set_falling_into_block()
                 ball.vel = Vector(ball.vel.x, 20)
+
+    def enemy_collision_handler(self, ob, en):
+        if ob.type == Constants.FALL_BLOCK:
+            if self.determine_collision_location(ob, en.ball) == Constants.TOP_COLLISION:
+                en.ball.vel = Vector(en.ball.vel.x, 20)
+                en.vel = en.ball.vel
