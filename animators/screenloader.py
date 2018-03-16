@@ -21,9 +21,9 @@ class ScreenLoader:
         return res
 
     def get_random_object(self):
-        r = random.randrange(1, 8)
-        # if r == 0:
-        #   return ScreenObjects(Constants.BUSH, 7, Constants.BASE, self.obstacles_distance_between)
+        r = random.randrange(0, 8)
+        if r == 0:
+            return ScreenObjects(Constants.BUSH, 7, Constants.BASE, self.obstacles_distance_between)
         if r == 1:
             return Obstacle(Constants.GREEN_PIPE, 6, Constants.BASE, self.obstacles_distance_between)
         elif r == 2:
@@ -54,4 +54,3 @@ class ScreenLoader:
 
     def get_obstacles_distance_traveled(self):
         return self.obstacles_distance_between
-

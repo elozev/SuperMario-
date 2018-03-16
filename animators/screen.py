@@ -8,7 +8,7 @@ from player.vector import Vector
 
 
 class Screen:
-    def __init__(self, background):
+    def __init__(self, background, ball):
         self.lives = 3
         self.score = 0
 
@@ -18,8 +18,7 @@ class Screen:
         self.obstacles = self.generate_new_obstacles(500)
         self.screen_objects = self.generate_clouds()
         self.background = background
-
-        self.test_ball = TestBall(Vector(Constants.WIDTH / 2, Constants.HEIGHT / 2), 30, 2, 'red')
+        self.test_ball = ball
 
         self.collision_handler = Collision()
 
@@ -53,8 +52,9 @@ class Screen:
     def update(self, offset):
         # checks is more obstacles are needed and generates if so
         self.check_distance_traveled()
+        self.check_clouds_enough()
         self.test_ball.update(offset, self.is_background_moving)
-        self.move_bg_after_hero_is_middle()
+        self.move_bg_after_hero_is_middle(offset)
 
         for pu in self.power_ups:
             if not pu.get_hide_image():
@@ -63,9 +63,11 @@ class Screen:
         for gr in self.grenades:
             gr.update_grenade()
 
-    def move_bg_after_hero_is_middle(self):
+    def move_bg_after_hero_is_middle(self, offset):
         ball_rad_line_w = self.test_ball.rad + self.test_ball.line_width
         move_screen_with = 0
+        #TODO: to be implemented
+        #is_right_key_pressed = offset[1] == Constants.ORIENTATION_RIGHT
 
         self.is_background_moving = self.test_ball.pos.x + ball_rad_line_w > Constants.WIDTH / 2 + 50 and not self.block_background_movement
         if self.is_background_moving:
@@ -98,13 +100,12 @@ class Screen:
                     self.collision_handler.grenade_collision_handler(ob, gr)
                     gr.bounce_off(collision_where)
 
-
     def check_distance_traveled(self):
-        if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH:
+        if self.background.get_progress() >= self.screen_loader.get_obstacles_distance_traveled() - Constants.WIDTH * 2:
             self.obstacles.extend(self.generate_new_obstacles(self.background.get_progress()))
 
     def check_clouds_enough(self):
-        if self.background.get_progress() >= self.screen_loader.clouds_distance_traveled:
+        if self.background.get_progress() >= self.screen_loader.clouds_distance_traveled - Constants.WIDTH * 2:
             self.screen_objects.extend(self.generate_clouds())
 
     def generate_new_obstacles(self, start_at):
@@ -112,9 +113,6 @@ class Screen:
 
     def generate_clouds(self):
         return self.screen_loader.load_clouds()
-
-    def add_coin_for_animation(self):
-        pass
 
     def add_points_to_score(self, points):
         self.score += points
@@ -124,7 +122,7 @@ class Screen:
         self.add_points_to_score(100)
 
     def animate_text(self, canvas):
-        canvas.draw_text("Lives", [50, 50], 22, "White", "sans-serif")
+        canvas.draw_text("Progress", [50, 50], 22, "White", "sans-serif")
         canvas.draw_text("Score", [680, 50], 22, "White", "sans-serif")
         canvas.draw_text(str(self.lives), [50, 80], 22, "White", "sans-serif")
         canvas.draw_text(str(self.score), [680, 80], 22, "White", "sans-serif")

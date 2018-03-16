@@ -1,3 +1,8 @@
+try:
+    import simplegui
+except ImportError:
+    import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
+
 import math
 
 from constants import Constants
@@ -5,7 +10,9 @@ from player.vector import Vector
 
 
 class TestBall:
-    def __init__(self, pos, rad, line_width, col, vel=Vector(0, 0)):
+    def __init__(self, pos, rad, line_width, col, ground, vel=Vector(0, 0)):
+        self.is_in_left_collision = False
+        self.is_in_right_collision = False
         self.pos = pos
         self.rad = rad
         self.line_width = line_width
@@ -14,32 +21,75 @@ class TestBall:
         self.desired_size = rad
         self.collision_where = Constants.NONE_COLLISION
 
+        self.ground = ground
+        self.jumping = False
+        self.acc = 4
+        self.block_right_movement = False
+
     def draw_ball(self, canvas):
         canvas.draw_circle(self.pos.getP(), self.rad, self.line_width, self.col, self.col)
 
     def update(self, offset, block_right_movement):
-        self.vel = Vector(0, 0)
-        offset_movement = offset[0]
         orientation = offset[1]
+        self.block_right_movement = block_right_movement
+        self.ground = Constants.GROUND_FOR_BALL
+        self.is_in_right_collision = False
+        self.is_in_left_collision = False
 
-        if orientation == Constants.ORIENTATION_UP:
-            if not self.collision_where == Constants.BOTTOM_COLLISION:
-                self.vel = Vector(0, offset_movement)
-        elif orientation == Constants.ORIENTATION_DOWN:
-            if not self.collision_where == Constants.TOP_COLLISION:
-                self.vel = Vector(0, offset_movement)
-        elif orientation == Constants.ORIENTATION_LEFT:
-            if not self.collision_where == Constants.RIGHT_COLLISION and not self.check_mario_going_far_left():
-                self.vel = Vector(offset_movement, 0)
-        elif orientation == Constants.ORIENTATION_RIGHT:
-            if not self.collision_where == Constants.LEFT_COLLISION:
-                if not block_right_movement:
-                    self.vel = Vector(offset_movement, 0)
+        if self.collision_where == Constants.BOTTOM_COLLISION:
+            if orientation == Constants.ORIENTATION_UP:
+                self.vel.y += 5
+        elif self.collision_where == Constants.TOP_COLLISION:
+            self.ground = self.pos.y
+        elif self.collision_where == Constants.RIGHT_COLLISION:
+            self.is_in_left_collision = True
+            self.vel.x = 0
+            self.pos.x += 1
+
+        elif self.collision_where == Constants.LEFT_COLLISION:
+
+            self.is_in_right_collision = True
+            self.vel.x = 0
+            # this resolves the sticky problem
+            self.pos.x -= 1
+
+        if self.check_mario_going_far_left():
+            self.pos.x += 1
+            self.vel.x = 0
+        elif self.check_mario_going_far_right():
+            self.pos.x -= 1
+            self.vel.x = 0
+        # if self.block_right_movement:
+        #     self.pos.x -= 1
+
         self.collision_where = Constants.NONE_COLLISION
         self.update_pos()
 
     def update_pos(self):
         self.pos.add(self.vel)
+        # if self.jumping:
+        self.vel.y += Constants.GRAVITY
+        if self.pos.y >= self.ground:
+            self.jumping = False
+            self.vel.y = 0
+            self.pos.y = self.ground
+
+    def update_on_key_down(self, key):
+        if key == simplegui.KEY_MAP["up"]:
+            self.jumping = True
+            self.vel.y = -5
+        elif key == simplegui.KEY_MAP["left"] and not self.is_in_left_collision:
+            self.vel.x -= self.acc
+        elif key == simplegui.KEY_MAP["right"] and not self.is_in_right_collision:
+            self.vel.x += self.acc
+
+    def update_on_key_up(self, key):
+        if key == simplegui.KEY_MAP["up"]:
+            self.vel.y = 0
+        elif key == simplegui.KEY_MAP["left"]:
+            self.vel.x = 0
+        elif key == simplegui.KEY_MAP["right"]:
+            self.vel.x = 0
 
     def set_collision_where(self, collision_where):
         self.collision_where = collision_where
@@ -49,6 +99,9 @@ class TestBall:
 
     def check_mario_going_far_left(self):
         return self.pos.x - (self.rad + self.line_width) <= 0
+
+    def check_mario_going_far_right(self):
+        return self.pos.x + (self.rad + self.line_width) >= Constants.WIDTH
 
     def is_stanionary(self):
         return self.vel.x == 0 and self.vel.y == 0
@@ -60,7 +113,7 @@ class TestBall:
 class Grenade(TestBall):
 
     def __init__(self, pos, rad, line_width, col, ground, vel=Vector(0, 0)):
-        super(Grenade, self).__init__(pos, rad, line_width, col, vel)
+        super(Grenade, self).__init__(pos, rad, line_width, col, ground, vel)
         self.line_x = Constants.WIDTH - 300
         self.going_down = True
         self.ground = ground

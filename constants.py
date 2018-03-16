@@ -1,5 +1,6 @@
 class Constants:
-    SCREEN_MOVEMENT_SPEED = 10
+    GRAVITY = 0.1
+    SCREEN_MOVEMENT_SPEED = 5
     ORIENTATION_NONE = "orientation-none"
     ORIENTATION_UP = "orientation-up"
     ORIENTATION_DOWN = "orientation-down"
@@ -30,3 +31,7 @@ class Constants:
     LEFT_COLLISION = "LEFT_COLLISION"
     RIGHT_COLLISION = "RIGHT_COLLISION"
     NONE_COLLISION = "NONE_COLLISION"
+
+    GROUND_FOR_BALL = BASE + 40
+
+
