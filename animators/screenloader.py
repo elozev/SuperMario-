@@ -1,7 +1,7 @@
 import random
 
-from animators.screenobjects import Obstacle
-from animators.screenobjects import ScreenObjects
+from animators.screenobject import Obstacle
+from animators.screenobject import ScreenObject
 from constants import Constants
 
 
@@ -23,7 +23,7 @@ class ScreenLoader:
     def get_random_object(self):
         r = random.randrange(0, 8)
         if r == 0:
-            return ScreenObjects(Constants.BUSH, 7, Constants.BASE, self.obstacles_distance_between)
+            return ScreenObject(Constants.BUSH, 7, Constants.BASE, self.obstacles_distance_between)
         if r == 1:
             return Obstacle(Constants.GREEN_PIPE, 6, Constants.BASE, self.obstacles_distance_between)
         elif r == 2:
@@ -48,7 +48,7 @@ class ScreenLoader:
     def load_clouds(self):
         sb = []
         for i in range(5):
-            sb.append(ScreenObjects(Constants.CLOUD, 7, random.randrange(50, 400), self.clouds_distance_traveled))
+            sb.append(ScreenObject(Constants.CLOUD, 7, random.randrange(50, 400), self.clouds_distance_traveled))
             self.clouds_distance_traveled += random.randrange(300, 800)
         return sb
 

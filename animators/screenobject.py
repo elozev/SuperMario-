@@ -6,7 +6,7 @@ except ImportError:
     import SimpleGUICS2Pygame.simpleguics2pygame as simplegui
 
 
-class ScreenObjects:
+class ScreenObject:
 
     def __init__(self, img_url, scale, base, start_at):
         self.img = simplegui.load_image(img_url)
@@ -48,7 +48,7 @@ class ScreenObjects:
         return Vector(self.animate_at_w, self.base)
 
 
-class Obstacle(ScreenObjects):
+class Obstacle(ScreenObject):
 
     def __init__(self, img_url, scale, base, start_at):
         super(Obstacle, self).__init__(img_url, scale, base, start_at)

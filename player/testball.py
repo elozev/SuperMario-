@@ -63,16 +63,18 @@ class TestBall:
         #     self.pos.x -= 1
 
         self.collision_where = Constants.NONE_COLLISION
-        self.update_pos()
+        self.update_mario()
 
-    def update_pos(self):
-        self.pos.add(self.vel)
-        # if self.jumping:
+    def update_mario(self):
+        self.update_pos()
         self.vel.y += Constants.GRAVITY
         if self.pos.y >= self.ground:
             self.jumping = False
             self.vel.y = 0
             self.pos.y = self.ground
+
+    def update_pos(self):
+        self.pos.add(self.vel)
 
     def update_on_key_down(self, key):
         if key == simplegui.KEY_MAP["up"]:

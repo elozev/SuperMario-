@@ -1,6 +1,6 @@
 from animators.coin import Coin
 from animators.screenloader import ScreenLoader
-from animators.screenobjects import Obstacle
+from animators.screenobject import Obstacle
 from constants import Constants
 from player.collision import Collision
 from player.testball import TestBall, Grenade
@@ -136,7 +136,7 @@ class Screen:
     def update_power_ups(self, move_screen_with):
         for pu in self.power_ups:
             if not pu.get_hide_image():
-                pu.update_pos(move_screen_with)
+                pu.update_mario(move_screen_with)
 
     def update_grenade_pos(self, move_screen_with):
         for gr in self.grenades:
