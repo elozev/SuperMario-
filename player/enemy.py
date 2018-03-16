@@ -36,7 +36,7 @@ class Enemy:
         self.pos = pos
         self.vel = Vector(-1, 0)
         self.counter = 0
-        self.ball = TestBall(self.pos, self.Goomba_image.get_height() / 2, 1, 'rgba(0, 0, 0, 0.5)', self.pos.x, self.vel)
+        self.ball = TestBall(self.pos, self.Goomba_image.get_height() / 2, 1, 'rgba(0, 0, 0, 0)', self.pos.x, self.vel)
         self.time = 0
 
     # define draw handler

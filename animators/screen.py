@@ -9,7 +9,7 @@ from player.vector import Vector
 
 
 class Screen:
-    def __init__(self, background, ball):
+    def __init__(self, background, ball, state):
         self.progress = 3
         self.score = 0
 
@@ -32,6 +32,8 @@ class Screen:
         self.power_ups = []
         self.grenades = []
         self.enemies = []
+
+        self.state = state
 
     def animate(self, canvas):
         # background
@@ -94,6 +96,7 @@ class Screen:
         for ob in self.obstacles:
             ob.update(offset)
             if self.collision_handler.is_colliding_with_ball(ob, self.test_ball, self.canvas):
+                print("COL" * 10)
                 collision_where = self.collision_handler.determine_collision_location(ob, self.test_ball)
                 self.collision_handler.trigger_action(ob, self.test_ball, self)
 
@@ -117,11 +120,10 @@ class Screen:
                     if collision_where == Constants.LEFT_COLLISION or collision_where == Constants.RIGHT_COLLISION:
                         en.reflect_movement()
                 if self.collision_handler.two_ball_collision(en.ball, self.test_ball):
-                    print(10 * "GAME OVER")
+                    self.state.game_over(self.progress, self.score)
 
                 for gr in self.grenades:
                     if self.collision_handler.two_ball_collision(gr, en.ball):
-                        print("Enemy dies" * 10)
                         en.die()
                         gr.explode()
                         self.add_points_to_score(200)

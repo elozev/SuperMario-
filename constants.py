@@ -24,7 +24,7 @@ class Constants:
     SIX_BLOCK = "https://i.imgur.com/T365ftC.png"
     EIGHT_BLOCK = "https://i.imgur.com/oBT3QNU.png"
     CLOUD = "https://i.imgur.com/ueJ91rY.png"
-    FALL_BLOCK = "https://upload.wikimedia.org/wikipedia/commons/c/c7/Solid_green.png" #"https://i.imgur.com/V1jvSaE.png"
+    FALL_BLOCK = "https://i.imgur.com/V1jvSaE.png"
 
     TOP_COLLISION = "TOP_COLLISION"
     BOTTOM_COLLISION = "BOTTOM_COLLISION"
@@ -32,6 +32,6 @@ class Constants:
     RIGHT_COLLISION = "RIGHT_COLLISION"
     NONE_COLLISION = "NONE_COLLISION"
 
-    GROUND_FOR_BALL = BASE + 40
+    GROUND_FOR_BALL = BASE + 41
 
 
